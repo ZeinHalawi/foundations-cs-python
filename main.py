@@ -39,6 +39,7 @@ for line in f:
 
 #defining 2 functions for user and admin menus
 def displayAdminMenu():
+  print("________________")
   print("kindly choose from 1 to 7 \n1. Display Statistics\n2. Book a Ticket\n3. Display all Tickets\n4. Change Ticket's Priority\n5. Disable Ticket\n6. Run Events\n7. Exit\n")
   
 
@@ -71,22 +72,41 @@ def displayStatistics():
       maxevent=ev
       
 
-  print("this is the event with the highest count of tickets",maxevent)
+  print("this is the event with the highest count of tickets:",maxevent)
 
 def bookTicket():
-    new_tick=int(list[-1]['tick'][4:])+1 
-    new_ticket_String = "tick" + str(new_tick)
+    new_tick=int(list[-1]['tick'][4:])+1 # to get ticket number +1
+    new_ticket_String = "tick" + str(new_tick) # to add "tick" to the previous number
     new_event=input("please enter an event number:")
     new_username=input("please enter a name:")
     new_date=input("please enter date:")
     new_priority=input("please enter priority number:")
-    new_ticket={}
+    new_ticket={} #creating a dictionary
     values=[new_ticket_String,new_event,new_username,new_date,new_priority]
     for i in range(len(values)):
       new_ticket[keys[i]]=values[i]
-    list.append(new_ticket)  
+    list.append(new_ticket)    #appending to the privous list from file
       
-    print("New list contating the new ticket is:\n",list)  
+    print("New list containing the new ticket is:\n",list)  
+
+ 
+def changePriority():
+  old_tick_num=input("Please enter the number of ticket in list:")
+  old_tick= "tick"+old_tick_num
+  found=False
+
+  for dict in list:
+    if old_tick==dict['tick']: # checking if ticket is inside list
+      new_priority=input("please type new priority:")
+      found=True
+      dict['priority']=new_priority
+      
+      
+  if(found == False): print("This ticket was not found")
+
+  else:
+    print(list)
+   
 
 def main():
   username = input("Hello please enter a username:")
@@ -102,7 +122,9 @@ def main():
         if choice == 1:
           displayStatistics()
         elif choice == 2:
-          bookTicket()  
+          bookTicket()
+        elif choice == 4:
+          changePriority()    
         else:
           print("!!!invaild input") 
         displayAdminMenu()
