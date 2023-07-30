@@ -108,6 +108,26 @@ def changePriority():
     print(list)
    
 
+def disableTicket():
+  old_tick_num=input("Please enter the ticket ID that you want to delete in list:")
+  old_tick= "tick"+old_tick_num
+  found=False
+
+
+  for index in range(len(list)-1):# 0 , 1, 2 ,  3 
+    dict=list[index]
+    if old_tick == dict['tick']:
+      print ("found")
+      del list[index]
+      found = True
+      
+
+      
+
+  if(found == False): print("This ticket was not found")
+  else: print(list)
+
+
 def main():
   username = input("Hello please enter a username:")
   password = input("Please enter your password:")
@@ -125,8 +145,10 @@ def main():
           bookTicket()
         elif choice == 4:
           changePriority()    
+        elif choice == 5:
+          disableTicket()  
         else:
-          print("!!!invaild input") 
+          print("!!!invaild input!!!") 
         displayAdminMenu()
         choice=int(input())   
       print("You have exited the program")  
