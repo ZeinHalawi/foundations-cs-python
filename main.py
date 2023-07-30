@@ -127,6 +127,20 @@ def disableTicket():
   if(found == False): print("This ticket was not found")
   else: print(list)
 
+def bookUserTicket(username):
+  new_tick=int(list[-1]['tick'][4:])+1 # to get ticket number +1
+  new_ticket_String = "tick" + str(new_tick) # to add "tick" to the previous number
+  new_event=input("please enter an event number:")
+  new_date=input("please enter date:")
+  priority="0"
+  new_ticket={} 
+  values=[new_ticket_String,new_event,username,new_date,priority]
+  print(range(len(values)))
+  for i in range(len(values)):
+    print(i)
+    new_ticket[keys[i]]=values[i]
+  list.append(new_ticket) 
+  print(list) 
 
 def main():
   username = input("Hello please enter a username:")
@@ -175,4 +189,9 @@ def main():
   if username != "admin":
     print("Hello", username)
     displayUserMenu()
+    choice=int(input("please enter a number:"))
+    while choice!=2:
+      if choice == 1:
+        bookUserTicket(username)
+
 main()  
