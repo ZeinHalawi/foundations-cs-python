@@ -114,17 +114,21 @@ def disableTicket():
 def bookUserTicket(username):
   new_tick=int(list[-1]['tick'][4:])+1 # to get ticket number +1
   new_ticket_String = "tick" + str(new_tick) # to add "tick" to the previous number
-  new_event=input("please enter an event number:")
+  new_event="ev"+input("please enter an event number:")
   new_date=input("please enter date:")
   priority="0"
   new_ticket={} 
   values=[new_ticket_String,new_event,username,new_date,priority]
-  print(range(len(values)))
   for i in range(len(values)):
-    print(i)
     new_ticket[keys[i]]=values[i]
   list.append(new_ticket) 
   print(list) 
+  list22=[]
+  
+  s= "\n"+(",".join(values))
+  list22.append(s)
+  with open('zein text.txt', 'a') as f:#https://www.pythontutorial.net/python-basics/python-write-text-file/
+    f.write("".join(list22))
 
 def merge_priority(key, left, right):  
   # empty list for the resulting list
@@ -144,14 +148,23 @@ def merge_priority(key, left, right):
 
   return sorted_list
 
-def mergeSort_priority(unsorted_list,key):
+def displayAllTickets(): 
+  sorted_list = mergeSort(list,"date")
+ 
+  
+
+
+  for event in sorted_list: 
+    print(",".join(event.values()))#.values takes all values inside a dictionary, .join concatenates(joins) the values with an indicated string
+
+def mergeSort(unsorted_list,kaey):
   if len(unsorted_list) <= 1:
     return unsorted_list
     # returning any list that contains one element or it's empty
   else:
     mid = len(unsorted_list) // 2
-    left = mergeSort_priority(unsorted_list[:mid], key)
-    right = mergeSort_priority(unsorted_list[mid:],  key)
+    left = mergeSort(unsorted_list[:mid], key)
+    right = mergeSort(unsorted_list[mid:],  key)
     return (merge_priority(key, left, right,))
 
 def runEvents(): 
@@ -161,7 +174,7 @@ def runEvents():
       list_today.append(i)
       
   
-  sorted_list = mergeSort_priority(list_today,"priority")
+  sorted_list = mergeSort(list_today,"priority")
 
   print("these are today's events: \n")
   for event in sorted_list: 
@@ -230,5 +243,12 @@ def main():
     while choice!=2:
       if choice == 1:
         bookUserTicket(username)
-
+        #https://www.pythontutorial.net/python-basics/python-write-text-file/ (to write in a textfile)
+      else:
+          print("!!!invaild input!!!")
+      displayUserMenu()  
+      choice=int(input("please enter a number:"))
+      
+        
+        
 main()  
