@@ -205,6 +205,8 @@ def main():
           displayStatistics()
         elif choice == 2:
           bookTicket()
+        elif choice == 3:
+          displayAllTickets()  
         elif choice == 4:
           changePriority()    
         elif choice == 5:
