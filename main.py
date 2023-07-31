@@ -1,22 +1,6 @@
-#importing a text file (https://www.youtube.com/watch?v=0EgSo7hsRWM):
+from datetime import date# this is to import today's date
+#importing a text file (https://www.youtube.com/watch?v=0EgSo7hsRWM)
 file = open("zein text.txt", "r")
-
-f = file.readlines()  # change file into list to better extract from it (every line)
-
-
-list = []
-for line in f:
-  list.append(line.strip())  # to remove(/n)
-
-
-def printFile():  # to print the data in a readable way
-  for x in f:
-    print(x)
-
-
-#importing a text file (https://www.youtube.com/watch?v=0EgSo7hsRWM):
-file = open("zein text.txt", "r")
-
 f = file.readlines()  # change file into list to better extract from it (every line)
 
 keys = ["tick", "event", "username", "date", "priority"]
@@ -142,6 +126,57 @@ def bookUserTicket(username):
   list.append(new_ticket) 
   print(list) 
 
+def merge_priority(key, left, right):  
+  # empty list for the resulting list
+  sorted_list = []
+    # while neither of the lists is empty
+  while left != [] and right != []:
+      if int(left[0][key]) > int(right[0][key]):
+        sorted_list.append(left.pop(0))
+        # the pop function remove an item by specifing the index and returns its value
+      else:
+        sorted_list.append(right.pop(0))
+  if left == []:
+    sorted_list += right
+
+  elif right == []:
+    sorted_list += left
+
+  return sorted_list
+
+def mergeSort_priority(unsorted_list,key):
+  if len(unsorted_list) <= 1:
+    return unsorted_list
+    # returning any list that contains one element or it's empty
+  else:
+    mid = len(unsorted_list) // 2
+    left = mergeSort_priority(unsorted_list[:mid], key)
+    right = mergeSort_priority(unsorted_list[mid:],  key)
+    return (merge_priority(key, left, right,))
+
+def runEvents(): 
+  list_today=[]
+  for i in list:
+    if i['date']==str(date.today()).replace("-",""):#date.today.replace is to get todays date in this format(yyyymmdd)c
+      list_today.append(i)
+      
+  
+  sorted_list = mergeSort_priority(list_today,"priority")
+
+  print("these are today's events: \n")
+  for event in sorted_list: 
+    print(",".join(event.values()))#.values takes all values inside a dictionary, .join concatenates(joins) the values with an indicated string
+  
+  #deleting todays events
+  for i in sorted_list:
+    for j in list:
+      if i['tick']==j['tick']:
+        list.remove(j)
+      
+
+  print(list)   
+
+
 def main():
   username = input("Hello please enter a username:")
   password = input("Please enter your password:")
@@ -161,6 +196,8 @@ def main():
           changePriority()    
         elif choice == 5:
           disableTicket()  
+        elif choice == 6:
+          runEvents()  
         else:
           print("!!!invaild input!!!") 
         displayAdminMenu()
