@@ -8,7 +8,7 @@ list = []
 
 
 
-for line in f:
+for line in f: # O(N)
   
   dict = {}
   values=line.split(",")#turning the line into list of values
@@ -22,25 +22,26 @@ for line in f:
 
 
 #defining 2 functions for user and admin menus
-def displayAdminMenu():
+def displayAdminMenu(): #O(1) (because its a constant)
   print("________________")
   print("kindly choose from 1 to 7 \n1. Display Statistics\n2. Book a Ticket\n3. Display all Tickets\n4. Change Ticket's Priority\n5. Disable Ticket\n6. Run Events\n7. Exit\n")
   
 
   
-def displayUserMenu():
+def displayUserMenu(): #O(1) (because its a constant)
   print("kindly choose between the 2 options\n1. Book a ticket\n2. Exit\n")  
 
 
 #defining a fuction to show the event ID with the highest number of tickets.
-def displayStatistics():
-  
+def displayStatistics(): #O(N)
 
   list1 = []
   for record in list: # to create list1 which only has events in it
     event = record["event"]
     list1.append(event)
-  def checkCount(item): #  a function which raises a count every time it finds a specific event
+
+ #  a function which raises a count every time it finds a specific event
+  def checkCount(item): #O(N)
     counter=0
     for record in list1:
       if item==record:
@@ -58,12 +59,12 @@ def displayStatistics():
 
   print("this is the event with the highest count of tickets:",maxevent)
 
-def bookTicket():
+def bookTicket(): #O(N)
     new_tick=int(list[-1]['tick'][4:])+1 # to get ticket number +1
     new_ticket_String = "tick" + str(new_tick) # to add "tick" to the previous number
-    new_event=input("please enter an event number:")
+    new_event="ev"+input("please enter an event number:")
     new_username=input("please enter a name:")
-    new_date=input("please enter date:")
+    new_date=input("please enter date(in a yyyymmdd format):")
     new_priority=input("please enter priority number:")
     new_ticket={} #creating a dictionary
     values=[new_ticket_String,new_event,new_username,new_date,new_priority]
@@ -74,7 +75,7 @@ def bookTicket():
     print("New list containing the new ticket is:\n",list)  
 
  
-def changePriority():
+def changePriority(): #O(N)
   old_tick_num=input("Please enter the number of ticket in list:")
   old_tick= "tick"+old_tick_num
   found=False
@@ -92,30 +93,25 @@ def changePriority():
     print(list)
    
 
-def disableTicket():
+def disableTicket(): #O(N)
   old_tick_num=input("Please enter the ticket ID that you want to delete in list:")
   old_tick= "tick"+old_tick_num
   found=False
 
-
   for index in range(len(list)-1):# 0 , 1, 2 ,  3 
     dict=list[index]
     if old_tick == dict['tick']:
-      print ("found")
       del list[index]
       found = True
       
-
-      
-
   if(found == False): print("This ticket was not found")
   else: print(list)
 
-def bookUserTicket(username):
+def bookUserTicket(username): #O(N)
   new_tick=int(list[-1]['tick'][4:])+1 # to get ticket number +1
   new_ticket_String = "tick" + str(new_tick) # to add "tick" to the previous number
   new_event="ev"+input("please enter an event number:")
-  new_date=input("please enter date:")
+  new_date=input("please enter date(in yyyymmdd format):")
   priority="0"
   new_ticket={} 
   values=[new_ticket_String,new_event,username,new_date,priority]
@@ -129,8 +125,28 @@ def bookUserTicket(username):
   list22.append(s)
   with open('zein text.txt', 'a') as f:#https://www.pythontutorial.net/python-basics/python-write-text-file/
     f.write("".join(list22))
+#https://www.youtube.com/watch?v=cVZMah9kEjI
+def merge_eventid(key,left,right): #O(logN)
+  # empty list for the resulting list
+  sorted_list = []    
+    # while neither of the lists is empty
+  while left != [] and right != []:
+      if int(left[0][key][2:]) > int(right[0][key][2:]):
+        sorted_list.append(left.pop(0))
+        # the pop function remove an item by specifing the index and returns its value
+        #https://www.programiz.com/python-programming/methods/list/pop
+      else:
+        sorted_list.append(right.pop(0))
+  # if one of the lists became empty we append the other list (that's already sorted)
+  if left == []:
+    sorted_list += right
 
-def merge_priority(key, left, right):  
+  elif right == []:
+    sorted_list += left
+
+  return sorted_list    
+
+def merge_priority(key, left, right): #O(logN)
   # empty list for the resulting list
   sorted_list = []
     # while neither of the lists is empty
@@ -148,16 +164,8 @@ def merge_priority(key, left, right):
 
   return sorted_list
 
-def displayAllTickets(): 
-  sorted_list = mergeSort(list,"date")
- 
-  
 
-
-  for event in sorted_list: 
-    print(",".join(event.values()))#.values takes all values inside a dictionary, .join concatenates(joins) the values with an indicated string
-
-def mergeSort(unsorted_list,kaey):
+def mergeSort(unsorted_list,key): #O(NlogN)
   if len(unsorted_list) <= 1:
     return unsorted_list
     # returning any list that contains one element or it's empty
@@ -165,12 +173,28 @@ def mergeSort(unsorted_list,kaey):
     mid = len(unsorted_list) // 2
     left = mergeSort(unsorted_list[:mid], key)
     right = mergeSort(unsorted_list[mid:],  key)
-    return (merge_priority(key, left, right,))
+    if key!="event":
+      return (merge_priority(key, left, right,))
+    else:
+      return (merge_eventid(key, left, right))
 
-def runEvents(): 
+def displayAllTickets(): #O(N)
+  sorted_list = mergeSort(list,"date")
+  print("list sorted by date:")
+ 
+  for event in sorted_list: 
+    print(",".join(event.values()))#.values takes all values inside a dictionary, .join concatenates(joins) the values with an indicated string
+  sorted_list= mergeSort(list,"event")
+  print("list sorted by events:")
+  for event in sorted_list: 
+    print(",".join(event.values()))#.values takes all values inside a dictionary, .join concatenates(joins) the values with an indicated string
+
+
+def runEvents(): #O(N^2)
   list_today=[]
   for i in list:
-    if i['date']==str(date.today()).replace("-",""):#date.today.replace is to get todays date in this format(yyyymmdd)c
+    #(https://www.programiz.com/python-programming/datetime/current-datetime)
+    if i['date']==str(date.today()).replace("-",""):#date.today.replace is to get todays date in this format(yyyymmdd) 
       list_today.append(i)
       
   
@@ -186,11 +210,11 @@ def runEvents():
       if i['tick']==j['tick']:
         list.remove(j)
       
-
+  print("this is the list after deletion of todays tickets:")
   print(list)   
 
 
-def main():
+def main(): 
   username = input("Hello please enter a username:")
   password = input("Please enter your password:")
 
@@ -230,9 +254,7 @@ def main():
           password = input("enter your password:")
   
         elif counter >= 5:
-          print(
-              "program will terminate because you have entered the wrong password 5 times"
-          )
+          print("program will terminate because you have entered the wrong password 5 times")
           exit()
         else:
           print("welcome admin")
@@ -245,12 +267,11 @@ def main():
     while choice!=2:
       if choice == 1:
         bookUserTicket(username)
-        #https://www.pythontutorial.net/python-basics/python-write-text-file/ (to write in a textfile)
       else:
           print("!!!invaild input!!!")
       displayUserMenu()  
       choice=int(input("please enter a number:"))
       
-        
+    print("You have exited the program")    
         
 main()  
